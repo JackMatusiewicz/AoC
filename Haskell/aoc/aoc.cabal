@@ -6,26 +6,29 @@ cabal-version: 1.12
 
 name:           aoc
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/aoc#readme>
-homepage:       https://github.com/githubuser/aoc#readme
-bug-reports:    https://github.com/githubuser/aoc/issues
-author:         Author name here
+description:    Please see the README on GitHub at <https://github.com/jackmatusiewicz/aoc#readme>
+homepage:       https://github.com/jackmatusiewicz/aoc#readme
+bug-reports:    https://github.com/jackmatusiewicz/aoc/issues
+author:         Jack Matusiewicz
 maintainer:     example@example.com
-copyright:      2021 Author name here
+copyright:      2021 Jack Matusiewicz
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md
     ChangeLog.md
+data-files:
+    DayOneData.txt
+data-dir:       data
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/aoc
+  location: https://github.com/jackmatusiewicz/aoc
 
 library
   exposed-modules:
-      Lib
+      DayOne
   other-modules:
       Paths_aoc
   hs-source-dirs:

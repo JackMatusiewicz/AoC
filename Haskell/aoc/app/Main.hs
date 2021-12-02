@@ -1,6 +1,10 @@
 module Main where
 
-import Lib
+import DayOne
+import Paths_aoc ( getDataFileName )
 
 main :: IO ()
-main = someFunc
+main = do
+    filePath <- getDataFileName "DayOneData.txt"
+    text <- readFile filePath
+    print $ measureIncreases $ (read :: String -> Int) <$> lines text
