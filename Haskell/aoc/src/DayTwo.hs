@@ -10,8 +10,8 @@ module DayTwo(
 import Data.Aeson.Types (FromJSON)
 import GHC.Generics
 import Data.Aeson (ToJSON, encode)
-import Paths_aoc ( getDataFileName )
 import Data.Char (toUpper)
+import Scaffolding
 
 data Command =
     Forward Int
@@ -46,12 +46,11 @@ capitalise c = (toUpper . head) c : tail c
 
 solvePartOne :: IO ()
 solvePartOne = do
-    filePath <- getDataFileName "DayTwoData.txt"
-    text <- readFile filePath
+    lines <- getData "DayTwoData.txt"
     let SubmarineState (Depth d, Position p) =
             calculateState initialSubmarineState
             $ (read :: String -> Command)
-            <$> reverse (capitalise <$> lines text) in
+            <$> reverse (capitalise <$> lines) in
         print (d * p)
 
 newtype Aim = Aim Int deriving(Eq, Show)
@@ -71,10 +70,9 @@ initialSubmarineBState = SubmarineStateB (Depth 0, Position 0, Aim 0)
 
 solvePartTwo :: IO ()
 solvePartTwo = do
-    filePath <- getDataFileName "DayTwoData.txt"
-    text <- readFile filePath
+    lines <- getData "DayTwoData.txt"
     let SubmarineStateB (Depth d, Position p, _) =
             calculateState' initialSubmarineBState
             $ (read :: String -> Command)
-            <$> (capitalise <$> lines text) in
+            <$> (capitalise <$> lines) in
         print (d * p)
