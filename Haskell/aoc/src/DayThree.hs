@@ -36,3 +36,31 @@ solvePartOne = do
         let (Gamma g) = calculateGamma ((fmap . fmap) digitToInt lines) in
             let (Epsilon e) = getEpsilon bitCount (Gamma g) in
                 print $ g * e
+
+-- Part two
+
+-- We start with the first digit, filter on most (or least) common,
+-- we then repeat this until we only have a single number left, that is the chosen number.
+-- most = Oxygen generator ration
+-- least = co2 scrubber rating
+
+mode' :: [Int] -> (Int, Int)
+mode' xs = if (length $ filter (==1) xs) >= (length $ filter (==0) xs) then (1,0) else (0,1)
+
+findValue :: ((Int, Int) -> Int) -> BitCount -> [[Int]] -> [Int]
+findValue f (BitCount b) xs = go b 0 xs (transpose xs) where
+    go :: Int -> Int -> [[Int]] -> [[Int]] -> [Int]
+    go _ _ [x] _ = x
+    go max i xs transposedXs =
+        let mode = f $ mode' (transposedXs !! i) in
+            let remainingXs = filter (\ x -> x !! i == mode) xs in
+                go b (i+1) remainingXs (transpose remainingXs)
+
+solvePartTwo :: IO ()
+solvePartTwo = do
+    lines <- getData "DayThreeData.txt"
+    let bitCount = longestInput lines in
+        let numbersAsDigits = (fmap . fmap) digitToInt lines in
+            let o2 = findValue fst bitCount numbersAsDigits in
+                let co2 = findValue snd bitCount numbersAsDigits in
+                    print $ toInt o2 * toInt co2
