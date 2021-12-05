@@ -21,6 +21,7 @@ extra-source-files:
 data-files:
     DayOneData.txt
     DayTwoData.txt
+    DayThreeData.txt
 data-dir:       data
 
 source-repository head
@@ -30,7 +31,9 @@ source-repository head
 library
   exposed-modules:
       DayOne
+      DayThree
       DayTwo
+      Scaffolding
   other-modules:
       Paths_aoc
   hs-source-dirs:
