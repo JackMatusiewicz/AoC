@@ -3,7 +3,7 @@ module D4P1
 
 ) where
 
-import Data.Vector
+import Data.Vector (Vector)
 import Data.Matrix
 import Data.Foldable as Df
 
@@ -50,7 +50,7 @@ isMarked c = case c of
     _ -> False
 
 isWinningLine :: Vector BingoCell -> Bool
-isWinningLine = Df.foldr (\a s -> isMarked a && s) True
+isWinningLine = foldr (\a s -> isMarked a && s) True
 
 markBoard :: Picked -> BingoBoard -> BingoBoard
 markBoard (Picked v) (BingoBoard xs) = BingoBoard $ fmap (go v) xs
@@ -64,4 +64,14 @@ markBoard (Picked v) (BingoBoard xs) = BingoBoard $ fmap (go v) xs
 isWinningBoard :: BingoBoard -> Bool
 isWinningBoard (BingoBoard x) =
     let checks = [flip getRow x, flip getCol x]
-    in Df.foldr (||) False $ isWinningLine <$> (checks <*> [1 .. 5])
+    in or $ isWinningLine <$> (checks <*> [1 .. 5])
+
+findWinningBoards :: BingoSystem -> [BingoBoard]
+findWinningBoards = filter isWinningBoard . boards
+
+addPickedNumber :: Picked -> BingoSystem -> BingoSystem
+addPickedNumber p bs =
+    BingoSystem {
+        picked = p : picked bs,
+        boards = markBoard p <$> boards bs
+    }
