@@ -33,6 +33,7 @@ library:
   dependencies:
   - aeson
   - matrix
+  - vector
   
 
 executables:

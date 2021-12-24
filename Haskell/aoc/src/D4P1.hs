@@ -1,6 +1,11 @@
-module D4P1 where
+module D4P1
+(
 
+) where
+
+import Data.Vector
 import Data.Matrix
+import Data.Foldable as Df
 
 {-
 So, a bingo board is a 5x5 grid of numbers.
@@ -27,6 +32,29 @@ A cell is a number and either marked or unmarked
 
 data BingoCell = Marked Int | Unmarked Int
 
-newtype BingoBoard = BingoBoard [BingoCell]
+newtype BingoBoard = BingoBoard (Matrix BingoCell)
 
 data BingoSystem = BingoSystem { picked :: [Int], boards :: [BingoBoard] }
+
+{-
+N.B There is an optimisation to be made here.
+Rather than calculating the scores each time, we can store the number of marked values in each row and column, that way it's
+far fewer checks each iteration.
+-}
+
+isMarked :: BingoCell -> Bool
+isMarked c = case c of
+    (Marked _) -> True
+    _ -> False
+
+isWinningLine :: Vector BingoCell -> Bool
+isWinningLine = Df.foldr (\a s -> isMarked a && s) True
+
+markBoard :: Int -> BingoBoard -> BingoBoard
+markBoard v (BingoBoard xs) = BingoBoard $ fmap (go v) xs
+    where
+        go :: Int -> BingoCell -> BingoCell
+        go v (Unmarked x)
+            | x == v = Marked x
+            | otherwise = Unmarked x
+        go _ x = x
