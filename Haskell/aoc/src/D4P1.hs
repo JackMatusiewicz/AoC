@@ -34,7 +34,11 @@ data BingoCell = Marked Int | Unmarked Int
 
 newtype BingoBoard = BingoBoard (Matrix BingoCell)
 
-data BingoSystem = BingoSystem { picked :: [Picked], boards :: [BingoBoard] }
+data BingoSystem = BingoSystem {
+    picked :: [Picked],
+    boards :: [BingoBoard],
+    winningBoards :: [BingoBoard]
+}
 
 newtype Picked = Picked Int
 
@@ -44,13 +48,13 @@ Rather than calculating the scores each time, we can store the number of marked 
 far fewer checks each iteration.
 -}
 
-isMarked :: BingoCell -> Bool
-isMarked c = case c of
-    (Marked _) -> True
-    _ -> False
-
 isWinningLine :: Vector BingoCell -> Bool
-isWinningLine = foldr (\a s -> isMarked a && s) True
+isWinningLine = foldr (\a -> (isMarked a &&)) True
+    where
+        isMarked :: BingoCell -> Bool
+        isMarked c = case c of
+            (Marked _) -> True
+            _ -> False
 
 markBoard :: Picked -> BingoBoard -> BingoBoard
 markBoard (Picked v) (BingoBoard xs) = BingoBoard $ fmap (go v) xs
@@ -66,12 +70,23 @@ isWinningBoard (BingoBoard x) =
     let checks = [flip getRow x, flip getCol x]
     in or $ isWinningLine <$> (checks <*> [1 .. 5])
 
-findWinningBoards :: BingoSystem -> [BingoBoard]
-findWinningBoards = filter isWinningBoard . boards
-
 addPickedNumber :: Picked -> BingoSystem -> BingoSystem
 addPickedNumber p bs =
-    BingoSystem {
+    let updatedBoards = markBoard p <$> boards bs
+    in BingoSystem {
         picked = p : picked bs,
-        boards = markBoard p <$> boards bs
+        boards = updatedBoards,
+        winningBoards= filter isWinningBoard updatedBoards
     }
+
+makeSystem :: [Matrix Int] -> Maybe BingoSystem
+makeSystem xs = mk <$> traverse makeBoard xs
+    where
+        makeBoard :: Matrix Int -> Maybe BingoBoard
+        makeBoard i =
+            if nrows i == 5 && ncols i == 5 then
+                Just $ BingoBoard (Unmarked <$> i)
+            else Nothing
+
+        mk :: [BingoBoard] -> BingoSystem
+        mk b = BingoSystem { picked = [], winningBoards = [], boards = b}
