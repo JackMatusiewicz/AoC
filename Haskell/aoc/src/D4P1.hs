@@ -89,4 +89,4 @@ makeSystem xs = mk <$> traverse makeBoard xs
             else Nothing
 
         mk :: [BingoBoard] -> BingoSystem
-        mk b = BingoSystem { picked = [], winningBoards = [], boards = b}
+        mk b = BingoSystem { picked = [], winningBoards = [], boards = b }
