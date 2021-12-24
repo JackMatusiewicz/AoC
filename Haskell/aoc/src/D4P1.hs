@@ -34,7 +34,9 @@ data BingoCell = Marked Int | Unmarked Int
 
 newtype BingoBoard = BingoBoard (Matrix BingoCell)
 
-data BingoSystem = BingoSystem { picked :: [Int], boards :: [BingoBoard] }
+data BingoSystem = BingoSystem { picked :: [Picked], boards :: [BingoBoard] }
+
+newtype Picked = Picked Int
 
 {-
 N.B There is an optimisation to be made here.
@@ -50,11 +52,16 @@ isMarked c = case c of
 isWinningLine :: Vector BingoCell -> Bool
 isWinningLine = Df.foldr (\a s -> isMarked a && s) True
 
-markBoard :: Int -> BingoBoard -> BingoBoard
-markBoard v (BingoBoard xs) = BingoBoard $ fmap (go v) xs
+markBoard :: Picked -> BingoBoard -> BingoBoard
+markBoard (Picked v) (BingoBoard xs) = BingoBoard $ fmap (go v) xs
     where
         go :: Int -> BingoCell -> BingoCell
         go v (Unmarked x)
             | x == v = Marked x
             | otherwise = Unmarked x
         go _ x = x
+
+isWinningBoard :: BingoBoard -> Bool
+isWinningBoard (BingoBoard x) =
+    let checks = [flip getRow x, flip getCol x]
+    in Df.foldr (||) False $ isWinningLine <$> (checks <*> [1 .. 5])
