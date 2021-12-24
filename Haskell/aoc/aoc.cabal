@@ -30,6 +30,7 @@ source-repository head
 
 library
   exposed-modules:
+      D4P1
       DayOne
       DayThree
       DayTwo
@@ -41,6 +42,7 @@ library
   build-depends:
       aeson
     , base >=4.7 && <5
+    , matrix
   default-language: Haskell2010
 
 executable aoc-exe
