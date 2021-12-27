@@ -15,6 +15,7 @@ data-files:
 - DayOneData.txt
 - DayTwoData.txt
 - DayThreeData.txt
+- DayFour.txt
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package

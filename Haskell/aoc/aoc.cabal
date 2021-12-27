@@ -22,6 +22,7 @@ data-files:
     DayOneData.txt
     DayTwoData.txt
     DayThreeData.txt
+    DayFour.txt
 data-dir:       data
 
 source-repository head
