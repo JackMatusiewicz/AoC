@@ -131,8 +131,20 @@ calculate (Picked p) (BingoBoard b) =
         get (Unmarked x) = Sum { getSum = x }
         get (Marked _) = mempty
 
+-- | Simple trick for part two, we just keep going until we're left with a
+-- single board and then pass the remaining data through the original
+-- functions.
+findLastWinningBoard :: [Picked] -> BingoSystem -> Maybe (Picked, BingoBoard)
+findLastWinningBoard [] _ = Nothing
+findLastWinningBoard (p:ps) sys = go (addPickedNumber p sys)
+    where
+        go :: BingoSystem -> Maybe (Picked, BingoBoard)
+        go sys
+         |  length (boards sys) == 1 =
+             findWinningBoard ps (BingoSystem { picked = [], winningBoards = [], boards = boards sys})
+         | otherwise = findLastWinningBoard ps sys
 
 solve :: IO ()
 solve = do
     v <- filter (/= "") <$> getData "DayFour.txt"
-    print $ uncurry calculate <$> (fromInput v >>= uncurry findWinningBoard)
+    print $ uncurry calculate <$> (fromInput v >>= uncurry findLastWinningBoard)
