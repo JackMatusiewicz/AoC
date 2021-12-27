@@ -16,6 +16,7 @@ data-files:
 - DayTwoData.txt
 - DayThreeData.txt
 - DayFour.txt
+- DayFive.txt
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package
@@ -35,6 +36,8 @@ library:
   - aeson
   - matrix
   - vector
+  - containers
+  - bifunctors
   
 
 executables:

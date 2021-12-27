@@ -12,6 +12,7 @@ import Data.Foldable as Df
 import Scaffolding
 import Data.List(partition)
 import Data.Semigroup
+import Utils(chunks)
 
 data BingoCell = Marked Int | Unmarked Int deriving(Eq, Show)
 
@@ -86,11 +87,7 @@ makeSystem xs = mk <$> traverse makeBoard xs
         mk :: [BingoBoard] -> BingoSystem
         mk b = BingoSystem { picked = [], winningBoards = [], boards = b }
 
--- | Chunks a list into a list of lists where each sub list
--- has at most n elements.
-chunks :: Int -> [a] -> [[a]]
-chunks _ [] = []
-chunks n xs = take n xs : chunks n (drop n xs)
+
 
 split :: Char -> String -> [String]
 split c xs = go [] xs
