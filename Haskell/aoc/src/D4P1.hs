@@ -13,29 +13,6 @@ import Scaffolding
 import Data.List(partition)
 import Data.Semigroup
 
-{-
-So, a bingo board is a 5x5 grid of numbers.
-Numbers are picked, and matching numbers on boards are marked
-
-If a board has a full row _or_ a full column, then it is a winning board.
-
-In the case of a winning board:
-Start by finding the sum of all unmarked numbers on that board;
-Then, multiply that sum by the number that was just called when the board won.
-
-The first line of the input is a comma separated list of numbers: the numbers that are picked.
-Then there is an empty line.
-
-What follows is a set of 5 lines, representing a board, and then an empty line (which terminates the previous board)
-However, the final board is followed by the EOF marker.
-
-So, design:
-
-A bingo system contains a list of picked numbers and a set of boards.
-A bingo board has 25 cells
-A cell is a number and either marked or unmarked
--}
-
 data BingoCell = Marked Int | Unmarked Int deriving(Eq, Show)
 
 newtype BingoBoard = BingoBoard (Matrix BingoCell) deriving(Eq, Show)
@@ -112,6 +89,7 @@ makeSystem xs = mk <$> traverse makeBoard xs
 -- | Chunks a list into a list of lists where each sub list
 -- has at most n elements.
 chunks :: Int -> [a] -> [[a]]
+chunks _ [] = []
 chunks n xs = take n xs : chunks n (drop n xs)
 
 split :: Char -> String -> [String]
@@ -133,8 +111,7 @@ fromInput lines =
         toPicked = fmap (Picked . (read :: String -> Int)) . split ','
 
         toBoards :: [[String]] -> [Matrix Int]
-        toBoards =
-            fmap (fromLists . fmap (fmap (read :: String -> Int) . split ' '))
+        toBoards = fmap (fromLists . fmap (fmap (read :: String -> Int) . words))
 
 findWinningBoard :: [Picked] -> BingoSystem -> Maybe (Picked, BingoBoard)
 findWinningBoard [] _ = Nothing
@@ -151,11 +128,11 @@ calculate (Picked p) (BingoBoard b) =
     (p*) $ getSum $ foldMap get b
     where
         get :: BingoCell -> Sum Int
-        get (Marked x) = Sum { getSum = x }
-        get (Unmarked _) = mempty
+        get (Unmarked x) = Sum { getSum = x }
+        get (Marked _) = mempty
 
 
 solve :: IO ()
 solve = do
-    v <- getData "DayFour.txt"
+    v <- filter (/= "") <$> getData "DayFour.txt"
     print $ uncurry calculate <$> (fromInput v >>= uncurry findWinningBoard)
