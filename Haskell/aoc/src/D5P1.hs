@@ -64,6 +64,26 @@ generateLine (a,b) =
             | a < b = (a,b)
             | otherwise = (b,a)
 
+-- | All that is needed to have this work with diagonals for part 2
+generateLine2 :: (Point, Point) -> [Point]
+generateLine2 (a,b) =
+    let (Point (sx, sy), Point (ex, ey)) = order a b
+    in
+        Point (sx, sy) : go sx sy ex ey (clamp (ex - sx)) (clamp (ey - sy))
+    where
+        order :: Point -> Point -> (Point, Point)
+        order a b
+            | a < b = (a,b)
+            | otherwise = (b,a)
+
+        go :: Int -> Int -> Int -> Int -> Int -> Int -> [Point]
+        go cx cy ex ey dx dy
+            | (cx + dx == ex) && (cy + dy == ey) = [Point (cx + dx, cy + dy)]
+            | otherwise = Point (cx + dx, cy + dy) : go (cx + dx) (cy + dy) ex ey dx dy
+
+        clamp :: Int -> Int
+        clamp x = max (min x 1) (-1)
+
 fillGrid :: [Point] -> Grid
 fillGrid = foldl' (flip update) (Grid DM.empty)
 
@@ -76,6 +96,5 @@ solve = do
     v <- getData "DayFive.txt"
     print
         $ show
-        $ (findPointsGreaterThanOne . fillGrid . (>>= generateLine))
-            . ignoreDiagonals
-            <$> traverse formatInput v
+        $ (findPointsGreaterThanOne . fillGrid . (>>= generateLine2))
+        <$> traverse formatInput v
