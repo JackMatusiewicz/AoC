@@ -25,6 +25,7 @@ data-files:
     DayFour.txt
     DayFive.txt
     DaySix.txt
+    DaySeven.txt
 data-dir:       data
 
 source-repository head
@@ -37,6 +38,7 @@ library
       D5P1
       D6P1
       D6P2
+      D7P1
       DayOne
       DayThree
       DayTwo
