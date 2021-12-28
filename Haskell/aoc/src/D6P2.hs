@@ -20,7 +20,13 @@ size :: Shoal -> Integer
 size (Shoal s) = foldl' (\s (NumbersOfLanternfish a) -> s + a) 0 s
 
 tick :: Shoal -> Shoal
-tick (Shoal old) = Shoal $ DM.union (handleNonZero old) (handleZero old)
+tick (Shoal old) =
+    Shoal
+    $ DM.unionWith
+        (\(NumbersOfLanternfish a) (NumbersOfLanternfish b) ->
+            NumbersOfLanternfish $ a + b)
+        (handleNonZero old)
+        (handleZero old)
     where
         handleNonZero :: ShoalMap -> ShoalMap
         handleNonZero old =
@@ -54,4 +60,6 @@ formatInput :: [String] -> Shoal
 formatInput = makeShoal . (>>= fmap read . splitOn ",")
 
 solve :: IO ()
-solve = print "no"
+solve =  do
+    v <- getData "DaySix.txt"
+    print $ size $ iter 256 $ formatInput v
