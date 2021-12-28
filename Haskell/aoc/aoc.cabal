@@ -24,6 +24,7 @@ data-files:
     DayThreeData.txt
     DayFour.txt
     DayFive.txt
+    DaySix.txt
 data-dir:       data
 
 source-repository head
@@ -34,6 +35,7 @@ library
   exposed-modules:
       D4P1
       D5P1
+      D6P1
       DayOne
       DayThree
       DayTwo
@@ -49,6 +51,7 @@ library
     , bifunctors
     , containers
     , matrix
+    , split
     , vector
   default-language: Haskell2010
 

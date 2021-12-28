@@ -17,6 +17,7 @@ data-files:
 - DayThreeData.txt
 - DayFour.txt
 - DayFive.txt
+- DaySix.txt
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package
@@ -38,6 +39,7 @@ library:
   - vector
   - containers
   - bifunctors
+  - split
   
 
 executables:
