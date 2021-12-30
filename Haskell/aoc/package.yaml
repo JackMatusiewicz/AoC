@@ -41,6 +41,7 @@ library:
   - containers
   - bifunctors
   - split
+  - array
   
 
 executables:
