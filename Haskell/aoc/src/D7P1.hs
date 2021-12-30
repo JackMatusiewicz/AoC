@@ -106,12 +106,25 @@ formatInput =
     . join
     . fmap (fmap read . splitOn ",")
 
-todo :: (a, Maybe b) -> (a,b)
-todo (a, Just v) = (a,v)
-todo _ = error "Unreachable"
+-- Brute forcing part two.
+partTwoSum :: Int -> Array Int Int -> Int
+partTwoSum mu = sum . fmap (\a -> let x = abs (a - mu) in div (x * (x + 1))  2)
+
+partTwo :: Array Int Int -> Range -> Maybe Int
+partTwo xs (Range(start, end)) =
+    go xs start Nothing
+    where
+        go :: Array Int Int -> Int -> Maybe Int -> Maybe Int
+        go xs current v
+            | current > end = v
+            | otherwise =
+                let amount = partTwoSum current xs
+                in case v of
+                    Nothing -> go xs (current+1) (Just amount)
+                    Just other -> go xs (current+1) (Just $ if other < amount then other else amount)
 
 solve :: IO ()
 solve = do
     v <- getData "DaySeven.txt"
-    let x = (\(a,b) -> findPositionToMove (ResultCache DM.empty) b a b) =<< sequence (formatInput v)
+    let x = uncurry partTwo =<< sequence (formatInput v)
         in print x
