@@ -1,6 +1,5 @@
 module D8P1(solve) where
 
-
 import Scaffolding
 
 formatLine :: String -> Int
