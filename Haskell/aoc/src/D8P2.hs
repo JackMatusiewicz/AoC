@@ -54,28 +54,6 @@ mkWire 'F' = F
 mkWire 'G' = G
 mkWire s = error $ show s ++ " is not a valid Wire."
 
--- | The correct mapping for digits.
---
--- This isn't actually needed anywhere but saves me from flicking
--- back to the advent page.
-actualDigitMapping =
-    Mapping
-        $ foldl'
-            (flip (uncurry DM.insert))
-            DM.empty
-            [
-                (Zero, DS.fromList [A,B,C,E,F,G]),
-                (One, DS.fromList [C,F]),
-                (Two, DS.fromList [A,C,D,E,G]),
-                (Three, DS.fromList [A,C,D,F,G]),
-                (Four, DS.fromList [B,C,D,F]),
-                (Five, DS.fromList [A,B,D,F,G]),
-                (Six, DS.fromList [A,B,D,F,G,E]),
-                (Seven, DS.fromList [A,C,F]),
-                (Eight, DS.fromList [A,B,C,D,E,F,G]),
-                (Nine, DS.fromList [A,B,C,D,F,G])
-            ]
-
 -- | Converts a single line of input into the expected input for that screen.
 formatLine :: String -> Maybe Input
 formatLine = fmap (uncurry mkInput . bimap toPatterns toPatterns) . toTuple . splitOn "|"
