@@ -25,12 +25,12 @@ getAllCoords :: DM.Matrix Int -> [(Int, Int)]
 getAllCoords m = (,) <$> [1 .. DM.nrows m] <*> [1 .. DM.ncols m]
 
 -- | Finds the sum of all of the lowest points in the matrix.
-findSumOfLowestPoints :: [(Int, Int)] -> DM.Matrix Int -> Int
-findSumOfLowestPoints points m =
-    sum $ (+) 1 . (m DM.! ) <$> filter (`isLowestPoint` m) points
+findSumOfLowestPoints :: DM.Matrix Int -> [(Int, Int)] -> Int
+findSumOfLowestPoints m =
+    sum . fmap ((+) 1 . (m DM.! )) . filter (`isLowestPoint` m)
 
 solvePuzzle :: DM.Matrix Int -> Int
-solvePuzzle m = findSumOfLowestPoints (getAllCoords m) m
+solvePuzzle m = findSumOfLowestPoints m (getAllCoords m)
 
 -- | Simple helper function to convert
 -- the input into a matrix of ints.
