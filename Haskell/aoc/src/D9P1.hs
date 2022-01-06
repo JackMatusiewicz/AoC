@@ -18,7 +18,7 @@ isLowestPoint (x,y) m =
     and $ checkItem (m DM.! (x,y)) m . sumCoords (x,y) <$> allDirections
     where
         checkItem :: Int -> DM.Matrix Int -> (Int, Int) ->  Bool
-        checkItem v m (x,y) = maybe True (> v) $ DM.safeGet x y m
+        checkItem v m = maybe True (> v) . (flip $ uncurry DM.safeGet) m
 
 -- | Gets all possible coordinates from a matrix
 getAllCoords :: DM.Matrix Int -> [(Int, Int)]
@@ -30,7 +30,6 @@ findSumOfLowestPoints points m = sum $ (+) 1 . (m DM.! ) <$> filter (`isLowestPo
 
 solvePuzzle :: DM.Matrix Int -> Int
 solvePuzzle m = findSumOfLowestPoints (getAllCoords m) m
-
 
 -- | Simple helper function to convert
 -- the input into a matrix of ints.
