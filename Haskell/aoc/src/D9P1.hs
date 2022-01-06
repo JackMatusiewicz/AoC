@@ -26,7 +26,8 @@ getAllCoords m = (,) <$> [1 .. DM.nrows m] <*> [1 .. DM.ncols m]
 
 -- | Finds the sum of all of the lowest points in the matrix.
 findSumOfLowestPoints :: [(Int, Int)] -> DM.Matrix Int -> Int
-findSumOfLowestPoints points m = sum $ (+) 1 . (m DM.! ) <$> filter (`isLowestPoint` m) points
+findSumOfLowestPoints points m =
+    sum $ (+) 1 . (m DM.! ) <$> filter (`isLowestPoint` m) points
 
 solvePuzzle :: DM.Matrix Int -> Int
 solvePuzzle m = findSumOfLowestPoints (getAllCoords m) m
