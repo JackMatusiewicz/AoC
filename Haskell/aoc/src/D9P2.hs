@@ -61,9 +61,9 @@ findBasin m o = go DS.empty DS.empty m (PQ.insert (PointToCheck 0 o) PQ.empty)
                     else
                     -- get all neighbours we haven't seen before.
                     let neighbours = filter (not . flip DS.member visited) $ sumCoords h <$> allDirections
-                        isLowest = and $ checkItem (m DM.! h) m <$> neighbours
+                        smallerNeighbours = or $ checkItem (m DM.! h) m <$> neighbours
                     in
-                        if not isLowest then
+                        if smallerNeighbours then
                             go visited basin m newPq
                         else
                         go
@@ -73,7 +73,7 @@ findBasin m o = go DS.empty DS.empty m (PQ.insert (PointToCheck 0 o) PQ.empty)
                             (PQ.union newPq (PQ.fromList $ fmap mkPointToCheck neighbours))
 
         checkItem :: Int -> DM.Matrix Int -> (Int, Int) ->  Bool
-        checkItem v m = maybe True (>= v) . (flip $ uncurry DM.safeGet) m
+        checkItem v m = maybe False (< v) . (flip $ uncurry DM.safeGet) m
 
         isInvalidBasinValue :: Maybe Int -> Bool
         isInvalidBasinValue Nothing = True
