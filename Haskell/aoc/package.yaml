@@ -44,6 +44,8 @@ library:
   - bifunctors
   - split
   - array
+  - deepseq
+  - pqueue
   
 
 executables:
