@@ -32,10 +32,7 @@ format :: [Char] -> [Bracket]
 format = fmap mkBracket
 
 isMatchingPair :: Bracket -> Bracket -> Bool
-isMatchingPair (Open Parens) (Close Parens) = True
-isMatchingPair (Open Angular) (Close Angular) = True
-isMatchingPair (Open Bracket) (Close Bracket) = True
-isMatchingPair (Open Square) (Close Square) = True
+isMatchingPair (Open a) (Close b) = a == b
 isMatchingPair _ _ = False
 
 -- | Applies a bracket to the SeenBrackets
@@ -49,7 +46,7 @@ move :: SeenBrackets -> Bracket -> Maybe SeenBrackets
 move (SeenBrackets t) (Open x) = Just $ SeenBrackets $ Open x : t
 move (SeenBrackets []) (Close _) = Nothing
 move (SeenBrackets (h:t)) x =
-    if isMatchingPair x h then Just (SeenBrackets t) else Nothing
+    if isMatchingPair h x then Just (SeenBrackets t) else Nothing
 
 -- | Takes a line of brackets and
 -- checks to see if it is a valid line.
