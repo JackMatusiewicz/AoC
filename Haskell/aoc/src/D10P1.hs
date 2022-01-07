@@ -138,18 +138,17 @@ calculateScoreOfMissingSegment =
 
 solvePartTwo :: [[Bracket]] -> Int
 solvePartTwo =
-    (\a -> middleScore (div (length a) 2) a)
+    (\a -> middleScore a a)
     . DL.sort
     . fmap (calculateScoreOfMissingSegment . findMissingLineSegment)
     . getIncompleteLines
     . fmap consumeLine
 
     where
-        middleScore :: Int -> [Int] -> Int
-        middleScore 0 [] = error "Impossible"
-        middleScore n [] = error "Impossible"
-        middleScore 0 (h:t) = h
-        middleScore n (h:t) = middleScore (n-1) t
+        middleScore :: [Int] -> [Int] -> Int
+        middleScore (h:t) [x] = h
+        middleScore (h:t) (a:b:t2) = middleScore t t2
+        middleScore _ _ = error "Impossible"
 
 solve :: IO ()
 solve = do
