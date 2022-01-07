@@ -1,6 +1,6 @@
 module Main where
 
-import D9P2 (solve)
+import D10P1 (solve)
 
 main :: IO ()
 main = solve
