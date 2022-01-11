@@ -23,16 +23,7 @@ newtype Delta = Delta (Int, Int) deriving (Eq, Ord, Show)
 -- all possible neighbouring cells.
 adjacentDeltas :: [Delta]
 adjacentDeltas =
-    fmap Delta [
-        (-1, -1),
-        (1, 1),
-        (-1, 1),
-        (1, -1),
-        (1, 0),
-        (0, 1),
-        (-1, 0),
-        (0, -1)
-    ]
+    fmap Delta [(x,y) | x <- [-1..1], y <- [-1..1], (x,y) /= (0,0)]
 
 unwrapCavern :: Cavern -> DM.Matrix Octopus
 unwrapCavern (Cavern c) = c
