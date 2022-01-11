@@ -56,11 +56,27 @@ resetOctopus c = c
 tickPartOne :: Cavern -> Cavern
 tickPartOne = Cavern . fmap incrementLevel . unwrapCavern
 
+-- | Returns all valid positions in a matrix
+allCoords :: DM.Matrix a -> [(Int, Int)]
+allCoords m = [(x,y) | x <- [1 .. DM.nrows m], y <- [1 .. DM.ncols m]]
+
 -- | Flashes any octopi that have a power level greater than 9.
 --
 -- It then applies the levels to neighbours and repeats until there are no changes.
 tickPartTwo :: Cavern -> Cavern
-tickPartTwo = undefined
+tickPartTwo c =
+    let ac = (allCoords $ unwrapCavern c)
+    in go (filter (shouldFlash c) ac) ac c
+    where
+        go :: [(Int, Int)] -> [(Int, Int)] -> Cavern -> Cavern
+        go [] _ c = c
+        go flashed allCoords c = undefined
+
+        shouldFlash :: Cavern -> (Int, Int) -> Bool
+        shouldFlash (Cavern c) p =
+            case c DM.! p of
+                Flashed -> False
+                Charging n -> n > 9
 
 -- | Resets the power levels of any octopi that have flashed this step.
 tickPartThree :: Cavern -> Cavern
