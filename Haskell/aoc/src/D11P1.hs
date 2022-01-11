@@ -62,7 +62,7 @@ resetOctopus Flashed = Charging 0
 resetOctopus c = c
 
 -- | Increments all octopi power levels by 1.
-tickPartOne :: Cavern -> Cavern
+tickPartOne :: Cavern -> Cavern 
 tickPartOne = Cavern . fmap incrementLevel . unwrapCavern
 
 -- | Flashes any octopi that have a power level greater than 9.
