@@ -78,7 +78,16 @@ flashesFromPreviousTick = DF.foldl' (\s a -> s + didFlash a) 0 . unwrapCavern
         didFlash (Charging 0) = 1
         didFlash _ = 0
 
+flashesAfterNTicks :: Int -> Cavern -> Int
+flashesAfterNTicks n = go n 0
+    where
+        go :: Int -> Int -> Cavern -> Int
+        go 0 acc _ = acc
+        go n acc c =
+            let uc = allTicks c
+            in go (n-1) (acc + flashesFromPreviousTick uc) uc
+
 solve :: IO ()
 solve = do
     v <- getData "DayEleven.txt"
-    print $ show v
+    print $ show $ flashesAfterNTicks 100 $ makeCavern v
