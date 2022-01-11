@@ -29,8 +29,8 @@ unwrapCavern :: Cavern -> DM.Matrix Octopus
 unwrapCavern (Cavern c) = c
 
 -- | Adds a delta to a position and returns the new position.
-addDelta :: (Int, Int) -> Delta -> (Int, Int)
-addDelta (a,b) (Delta (c,d)) = (a + b, c + d)
+addDelta :: Delta -> (Int, Int) -> (Int, Int)
+addDelta (Delta (c,d)) (a,b) = (a + b, c + d)
 
 format :: String -> [Int]
 format = fmap digitToInt
@@ -70,13 +70,41 @@ tickPartTwo c =
     where
         go :: [(Int, Int)] -> [(Int, Int)] -> Cavern -> Cavern
         go [] _ c = c
-        go flashed allCoords c = undefined
+        go flashed allCoords c =
+            let flashedCavern = DF.foldl' setFlashed c flashed
+                allNeighbours = addDelta <$> adjacentDeltas <*> flashed
+                (updated2, toFlash) = DF.foldl' updateIncrement (flashedCavern, []) allNeighbours
+            in go toFlash allCoords updated2
+
+        updateIncrement :: (Cavern, [(Int, Int)]) -> (Int, Int) -> (Cavern, [(Int, Int)])
+        updateIncrement (c, toFlash) p =
+            let (nc, addFlash) = updatePosition c p
+            in (nc, if addFlash then p:toFlash else toFlash)
 
         shouldFlash :: Cavern -> (Int, Int) -> Bool
         shouldFlash (Cavern c) p =
             case c DM.! p of
                 Flashed -> False
                 Charging n -> n > 9
+
+        -- | Updates the charging value at a particular cell.
+        --
+        -- It returns the updated cavern and whether or not this position
+        -- itself needs to flash.
+        updatePosition :: Cavern -> (Int,Int) ->  (Cavern, Bool)
+        updatePosition (Cavern c) (x,y) =
+            case DM.safeGet x y c of
+                Nothing -> (Cavern c, False)
+                Just Flashed -> (Cavern c, False)
+                Just (Charging n) ->
+                    let uc = Cavern $ DM.setElem (Charging $ n + 1) (x,y) c
+                    in (uc, n == 9)
+
+        setFlashed :: Cavern -> (Int, Int) -> Cavern
+        setFlashed (Cavern c) (x,y) =
+            case DM.safeGet x y c of
+                Nothing -> Cavern c
+                _ -> Cavern $ DM.setElem Flashed (x,y) c
 
 -- | Resets the power levels of any octopi that have flashed this step.
 tickPartThree :: Cavern -> Cavern
