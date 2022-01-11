@@ -5,6 +5,9 @@ import qualified Data.Matrix as DM
 import qualified Data.Foldable as DF
 import Scaffolding
 
+import System.IO.Unsafe(unsafePerformIO)
+import Control.DeepSeq(deepseq)
+
 -- | Datatype modelling the state of an octopus.
 --
 -- It is either charging (with a value of 0-9) and when it finally reaches above level 9 it flashes.
@@ -30,7 +33,7 @@ unwrapCavern (Cavern c) = c
 
 -- | Adds a delta to a position and returns the new position.
 addDelta :: Delta -> (Int, Int) -> (Int, Int)
-addDelta (Delta (c,d)) (a,b) = (a + b, c + d)
+addDelta (Delta (c,d)) (a,b) = (a + c, b + d)
 
 format :: String -> [Int]
 format = fmap digitToInt
@@ -76,6 +79,8 @@ tickPartTwo c =
                 (updated2, toFlash) = DF.foldl' updateIncrement (flashedCavern, []) allNeighbours
             in go toFlash allCoords updated2
 
+        -- | Updates an octopus that is adjacent to a flasher, will also add them to a list
+        -- of "to flash" if it exceeds the threshold.
         updateIncrement :: (Cavern, [(Int, Int)]) -> (Int, Int) -> (Cavern, [(Int, Int)])
         updateIncrement (c, toFlash) p =
             let (nc, addFlash) = updatePosition c p
@@ -121,6 +126,10 @@ flashesFromPreviousTick = DF.foldl' (\s a -> s + didFlash a) 0 . unwrapCavern
         didFlash :: Octopus -> Int
         didFlash (Charging 0) = 1
         didFlash _ = 0
+
+toInt :: Octopus -> Int
+toInt (Charging n) = n
+toInt Flashed = error "no"
 
 flashesAfterNTicks :: Int -> Cavern -> Int
 flashesAfterNTicks n = go n 0

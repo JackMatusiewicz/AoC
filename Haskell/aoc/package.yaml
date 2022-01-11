@@ -22,6 +22,7 @@ data-files:
 - DayEight.txt
 - DayNine.txt
 - DayTen.txt
+- DayEleven.txt
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package
