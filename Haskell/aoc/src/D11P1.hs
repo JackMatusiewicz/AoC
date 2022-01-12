@@ -140,7 +140,21 @@ flashesAfterNTicks n = go n 0
             let uc = allTicks c
             in go (n-1) (acc + flashesFromPreviousTick uc) uc
 
+ -- PART TWO SPECIFIC CODE
+ -- Before the third part of the tick, count the number of octopi that have flashed.
+
+ticksUntilAllFlash :: Cavern -> Int
+ticksUntilAllFlash (Cavern c) =
+    go 0 (DM.nrows c * DM.ncols c) (flashesFromPreviousTick (Cavern c)) (Cavern c)
+    where
+        go :: Int -> Int -> Int -> Cavern -> Int
+        go iter tot lastFlashed c
+            | tot == lastFlashed = iter
+            | otherwise =
+                let uc = allTicks c
+                in go (iter + 1) tot (flashesFromPreviousTick uc) uc
+
 solve :: IO ()
 solve = do
     v <- getData "DayEleven.txt"
-    print $ show $ flashesAfterNTicks 100 $ makeCavern v
+    print $ show $ ticksUntilAllFlash $ makeCavern v
