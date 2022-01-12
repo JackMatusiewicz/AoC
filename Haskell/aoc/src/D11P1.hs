@@ -140,9 +140,9 @@ flashesAfterNTicks n = go n 0
             let uc = allTicks c
             in go (n-1) (acc + flashesFromPreviousTick uc) uc
 
- -- PART TWO SPECIFIC CODE
- -- Before the third part of the tick, count the number of octopi that have flashed.
+-- PART TWO SPECIFIC CODE
 
+-- | Returns the iteration that resulted in all octopi flashing.
 ticksUntilAllFlash :: Cavern -> Int
 ticksUntilAllFlash (Cavern c) =
     go 0 (DM.nrows c * DM.ncols c) (flashesFromPreviousTick (Cavern c)) (Cavern c)
