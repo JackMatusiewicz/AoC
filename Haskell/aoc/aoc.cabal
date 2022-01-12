@@ -30,6 +30,7 @@ data-files:
     DayNine.txt
     DayTen.txt
     DayEleven.txt
+    DayTwelve.txt
 data-dir:       data
 
 source-repository head
@@ -40,6 +41,7 @@ library
   exposed-modules:
       D10P1
       D11P1
+      D12P1
       D4P1
       D5P1
       D6P1
